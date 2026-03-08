@@ -11,7 +11,7 @@ PCBPriceAnalyzer/
 └── PCBPriceAnalyzer.Tests                   # 单元测试项目（xUnit）
 ```
 
-1. PCBPriceAnalyzer.Models (类库 .NET 6/7/8)
+1. PCBPriceAnalyzer.Models (类库 .NET 8)
 用途：定义核心数据模型、数据库实体、DTO以及ML.NET所需的输入/输出类。
 
 文件夹/文件结构：
@@ -198,5 +198,5 @@ Microsoft.EntityFrameworkCore.Design (用于迁移)
 * PredictionServiceTests.cs
 * RepositoryTests.cs (使用内存数据库)
 
-
+![首页截图](https://images.codeobservatory.cn/pcb/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20260308171008_41_72.png)
 

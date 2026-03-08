@@ -1,12 +1,20 @@
 ## 项目结构
 PCBPriceAnalyzer/
+
 ├── PCBPriceAnalyzer.Models               # 实体、DTO、枚举
+
 ├── PCBPriceAnalyzer.Data                  # EF Core DbContext、Repository、迁移
+
 ├── PCBPriceAnalyzer.Services               # 业务逻辑、价格计算、预测服务接口
+
 ├── PCBPriceAnalyzer.ML                     # ML.NET 模型训练、预测引擎
+
 ├── PCBPriceAnalyzer.DataCollection          # 数据采集（爬虫/API定时任务）
+
 ├── PCBPriceAnalyzer.Common                  # 工具类、常量、日志扩展
+
 ├── PCBPriceAnalyzer.WPF                     # WPF 客户端（MVVM）
+
 └── PCBPriceAnalyzer.Tests                   # 单元测试项目（xUnit）
 
 1. PCBPriceAnalyzer.Models (类库 .NET 6/7/8)

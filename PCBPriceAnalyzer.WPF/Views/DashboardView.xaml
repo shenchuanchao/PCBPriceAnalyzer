@@ -1,0 +1,114 @@
+﻿<UserControl x:Class="PCBPriceAnalyzer.WPF.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PCBPriceAnalyzer.WPF.Views"
+             xmlns:viewModels="clr-namespace:PCBPriceAnalyzer.WPF.ViewModels"
+             xmlns:ScottPlot="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF"
+             xmlns:converters="clr-namespace:PCBPriceAnalyzer.WPF.Converters"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance viewModels:DashboardViewModel}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converters:SignConverter x:Key="SignConverter"/>
+        <!-- 添加内置转换器 -->
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <Style TargetType="Border" x:Key="CardStyle">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#DDD"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="5" ShadowDepth="2" Opacity="0.1"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="PriceChangeStyle">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="10">
+            <!-- 欢迎信息 -->
+            <TextBlock Text="{Binding WelcomeMessage}" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,15"/>
+
+            <!-- 加载指示器 -->
+            <ProgressBar IsIndeterminate="True" Height="4" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+            <!-- 价格卡片区域 -->
+            <TextBlock Text="关键材料实时价格" FontSize="14" FontWeight="Bold" Margin="0,10,0,5"/>
+            <ItemsControl ItemsSource="{Binding PriceCards}" Margin="0,0,0,15">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource CardStyle}" Width="180">
+                            <StackPanel>
+                                <TextBlock Text="{Binding MaterialName}" FontWeight="Bold" FontSize="14"/>
+                                <TextBlock Text="{Binding LatestPrice, StringFormat={}{0:N2}}" FontSize="16" FontWeight="Bold" Margin="0,5,0,0"/>
+                                <TextBlock Text="{Binding Unit}" FontSize="10" Foreground="Gray"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                    <TextBlock Text="{Binding ChangeSymbol}" Foreground="{Binding ChangeColor}" FontSize="12"/>
+                                    <TextBlock Text="{Binding ChangePercent, StringFormat={}{0:0.0}%}" Foreground="{Binding ChangeColor}" Margin="2,0,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- 价格走势图 -->
+            <TextBlock Text="铜价近期走势" FontSize="14" FontWeight="Bold" Margin="0,10,0,5"/>
+            <Border Style="{StaticResource CardStyle}" Padding="5">
+                <ScottPlot:WpfPlot x:Name="PricePlot" Height="250"/>
+            </Border>
+
+            <!-- 涨幅排行榜 -->
+            <TextBlock Text="周/月涨幅排行榜" FontSize="14" FontWeight="Bold" Margin="0,15,0,5"/>
+            <Border Style="{StaticResource CardStyle}">
+                <DataGrid ItemsSource="{Binding TopGainers}" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" BorderThickness="0">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="材料" Binding="{Binding MaterialName}" Width="*"/>
+                        <DataGridTextColumn Header="当前价格" Binding="{Binding Price, StringFormat={}{0:N2}}" Width="Auto"/>
+                        <DataGridTextColumn Header="周涨幅" Width="Auto">
+                            <DataGridTextColumn.Binding>
+                                <MultiBinding StringFormat="{}{0}{1:0.0}%">
+                                    <Binding Path="WeekChange" Converter="{StaticResource SignConverter}"/>
+                                    <Binding Path="WeekChange"/>
+                                </MultiBinding>
+                            </DataGridTextColumn.Binding>
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="{Binding WeekChangeColor}"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="月涨幅" Width="Auto">
+                            <DataGridTextColumn.Binding>
+                                <MultiBinding StringFormat="{}{0}{1:0.0}%">
+                                    <Binding Path="MonthChange" Converter="{StaticResource SignConverter}"/>
+                                    <Binding Path="MonthChange"/>
+                                </MultiBinding>
+                            </DataGridTextColumn.Binding>
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="{Binding MonthChangeColor}"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

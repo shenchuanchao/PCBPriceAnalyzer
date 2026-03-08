@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="CsvHelper" Version="33.1.0" />
+    <PackageReference Include="EPPlus" Version="8.5.0" />
+    <PackageReference Include="iTextSharp" Version="5.5.13.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CBPriceAnalyzer.ML\CBPriceAnalyzer.ML.csproj" />
+    <ProjectReference Include="..\PCBPriceAnalyzer.Data\PCBPriceAnalyzer.Data.csproj" />
+  </ItemGroup>
+
+</Project>
